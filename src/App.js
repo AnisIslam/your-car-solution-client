@@ -1,11 +1,11 @@
 // import axios from "axios";
 import { createContext, lazy, Suspense, useEffect, useState } from "react";
 // import toast, { Toaster } from 'react-hot-toast';
-// import {
-//   BrowserRouter as Router,
-//   Route,
-//   Switch
-// } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Switch
+} from "react-router-dom";
 import './App.css';
 // import LoadingSpinner from "./components/Home/LoadingSpinner/LoadingSpinner";
 // import { getDecodedUser } from "./components/Login/LoginManager";
@@ -32,12 +32,21 @@ function App() {
   // }, [loggedInUser?.email]);
 
   return (
-    <div>
-      <Suspense fallback={<div>Loading... </div> }>
-        <Home />
+    <Router>
+      <Suspense fallback={<div>Loading... </div>}>
+        <Switch>
+          <Route exact path="/">
+            <Home />
+          </Route>
+
+        </Switch>
 
       </Suspense >
-    </div>
+
+
+    </Router>
+
+
     // <UserContext.Provider value={{ loggedInUser, setLoggedInUser, isAdmin, selectedService, setSelectedService }}>
     //   <Router>
     //     <Toaster />
