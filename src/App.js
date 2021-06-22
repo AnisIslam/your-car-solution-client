@@ -7,64 +7,51 @@ import {
   Switch
 } from "react-router-dom";
 import './App.css';
-// import LoadingSpinner from "./components/Home/LoadingSpinner/LoadingSpinner";
-// import { getDecodedUser } from "./components/Login/LoginManager";
-// import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+import LoadingSpinner from "./components/Home/LoadingSpinner/LoadingSpinner";
+import { getDecodedUser } from "./components/Login/LoginManager";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 const Home = lazy(() => import('./pages/Home'));
-// const Dashboard = lazy(() => import('./pages/Dashboard'));
-// const Login = lazy(() => import('./pages/Login'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Login = lazy(() => import('./pages/Login'));
 
-// export const UserContext = createContext();
+export const UserContext = createContext();
 
 function App() {
-  // const [loggedInUser, setLoggedInUser] = useState(getDecodedUser());
-  // const [selectedService, setSelectedService] = useState([]);
-  // const [adminLoading, setAdminLoading] = useState(true);
-  // const [isAdmin, setIsAdmin] = useState(false);
+  const [loggedInUser, setLoggedInUser] = useState(getDecodedUser());
+  const [selectedService, setSelectedService] = useState([]);
+  const [adminLoading, setAdminLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
-  // useEffect(() => {
-  //   axios.get(`https://gerez-server.herokuapp.com/isAdmin?email=${loggedInUser?.email}`)
-  //     .then(res => {
-  //       setIsAdmin(res.data);
-  //       setAdminLoading(false);
-  //     })
-  //     .catch(error => toast.error(error.message))
-  // }, [loggedInUser?.email]);
+  useEffect(() => {
+    // axios.get(`https://gerez-server.herokuapp.com/isAdmin?email=${loggedInUser?.email}`)
+    fetch(`https://gerez-server.herokuapp.com/isAdmin?email=${loggedInUser?.email}`)
+      .then(res => {
+        setIsAdmin(res.data);
+        setAdminLoading(false);
+      })
+      .catch(error => (error.message))
+    // .catch(error => toast.error(error.message))
+  }, [loggedInUser?.email]);
 
   return (
-    <Router>
-      <Suspense fallback={<div>Loading... </div>}>
-        <Switch>
-          <Route exact path="/">
-            <Home />
-          </Route>
-
-        </Switch>
-
-      </Suspense >
-
-
-    </Router>
-
-
-    // <UserContext.Provider value={{ loggedInUser, setLoggedInUser, isAdmin, selectedService, setSelectedService }}>
-    //   <Router>
-    //     <Toaster />
-    //     <Suspense fallback={<LoadingSpinner />}>
-    //       <Switch>
-    //         <Route exact path="/">
-    //           <Home />
-    //         </Route>
-    //         <PrivateRoute path="/dashboard/:panel">
-    //           <Dashboard adminLoading={adminLoading} />
-    //         </PrivateRoute>
-    //         <Route path="/login">
-    //           <Login />
-    //         </Route>
-    //       </Switch>
-    //     </Suspense>
-    //   </Router>
-    // </UserContext.Provider>
+    <UserContext.Provider value={{ loggedInUser, setLoggedInUser, isAdmin, selectedService, setSelectedService }}>
+      <Router>
+        {/* <Toaster /> */}
+        <Suspense fallback={<LoadingSpinner />}>
+          <Switch>
+            <Route exact path="/">
+              <Home />
+            </Route>
+            <PrivateRoute path="/dashboard/:panel">
+              <Dashboard adminLoading={adminLoading} />
+            </PrivateRoute>
+            <Route path="/login">
+              <Login />
+            </Route>
+          </Switch>
+        </Suspense>
+      </Router>
+    </UserContext.Provider>
   );
 }
 
